@@ -5,7 +5,7 @@ THIS CODE IS LICENSED UNDER THE GNU GPL v3, INCLUDED IN THE SVN, AND AT THE LINK
 NO WARRANTY PROVIDED.
 © FTC 4140 Fish in the Boat and Jeremy Koletar
 
-
+This file will not compile on its own.
 
 //Log\\
 *Created with the Joystick Button Feedback function, which adds helpful features like waiting for a joystick bump. 10-26 JJK
