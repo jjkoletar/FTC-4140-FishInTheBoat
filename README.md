@@ -1,7 +1,7 @@
 Fish in the Boat RobotC Code
 ============================
 
-![Darwin the fish](http://wiki.toontowners.com/w/images/thumb/c/cd/Fish.svg/300px-Fish.svg.png)
+![Darwin the fish](http://i.imgur.com/hQgnk.png)
 
 
 FTC 4140 Fish in the Boat has been a FIRST Tech Challenge (FTC) team since the 2010-11 season.
