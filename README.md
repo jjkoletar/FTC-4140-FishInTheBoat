@@ -8,4 +8,4 @@ FTC 4140 Fish in the Boat has been a FIRST Tech Challenge (FTC) team since the 2
 
 **NOTE: Some strategic code may be surpressed during the season. The end of the season should signify the release of surpressed code.**
 
-For more info, visit our website: <fishintheboat.org>
+For more info, visit our website: <http://fishintheboat.org>
