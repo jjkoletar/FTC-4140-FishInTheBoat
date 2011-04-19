@@ -136,16 +136,20 @@ High 40s on arm lsensor  = mat
 
 void conveyorBelt()
 {
-  if (joystickVal(2, "8") && joystickVal(2, "6")) {
-    highConveyorPower = !highConveyorPower;
-    waitForRelease(2, "8");
-    waitForRelease(2, "6");
+  if (joystickVal(2, "x1") < -100) {
+    //left high, neg
+    highConveyorPower = true;
+  }
+  else if (joystickVal(2, "x1") > 100)
+  {
+    //right low, pos
+    highConveyorPower = false;
   }
   if (highConveyorPower) conveyorPower = 25;
   else conveyorPower = 15;
   //down/out = pos, in = neg
-  if (joystickVal(2, "8")) motor[conveyorMotor] = conveyorPower;
-  else if (joystickVal(2, "6")) motor[conveyorMotor] = -conveyorPower;
+  if (joystickVal(2, "y1") > deadZone) motor[conveyorMotor] = conveyorPower;
+  else if (joystickVal(2, "y1") < deadZone && joystickVal(2, "y1") < 0) motor[conveyorMotor] = -conveyorPower;
   else motor[conveyorMotor] = 0;
   if (joystickVal(2, "7"))
   {
@@ -433,17 +437,17 @@ void holdGoalWatcher()
   // 120 = goal on wall
   // tophat 6= left, 2 = right
   // left goal holder
-  if (abs(joystickVal(2, "x1")) > deadZone && joystickVal(2, "x1") < 0) servo[leftGoalHolder] = servo[leftGoalHolder] + 3;
-  else if (abs(joystickVal(2, "x1")) > deadZone && joystickVal(2, "x1") > 0) servo[leftGoalHolder] = servo[leftGoalHolder] -3;
-  if (servo[leftGoalHolder] > 207) servo[leftGoalHolder] = 191;
-  else if (servo[leftGoalHolder] < 160) servo[leftGoalHolder] = 160;
+  //if (abs(joystickVal(2, "x1")) > deadZone && joystickVal(2, "x1") < 0) servo[leftGoalHolder] = servo[leftGoalHolder] + 3;
+  //else if (abs(joystickVal(2, "x1")) > deadZone && joystickVal(2, "x1") > 0) servo[leftGoalHolder] = servo[leftGoalHolder] -3;
+  if (joystickVal(2, "hat") == 6) servo[leftGoalHolder] = 191;
+  else if (joystickVal(2, "hat") == 2) servo[leftGoalHolder] = 160;
   // \left goal holder
 }
 
 void possessionWatcher()
 {
 
-  if (joystickVal(2, "1"))
+  if (joystickVal(2, "hat")==4)
   {
     //possess goal
     servo[possessionServo] = 140;
@@ -451,7 +455,7 @@ void possessionWatcher()
     //Wait is for packing into back
     servo[possessionServo] = 120;
   }
-  else if (joystickVal(2, "2"))
+  else if (joystickVal(2, "hat") == 0)
   {
     //release goal
     servo[possessionServo] = 0;
@@ -460,7 +464,7 @@ void possessionWatcher()
 
 void releasePreloadsWatcher()
 {
-  if (joystickVal(2, "4"))
+  if (joystickVal(2, "1"))
   {
     servo[preloadServo] = 255;
   }
