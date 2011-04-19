@@ -88,6 +88,7 @@ void initializeRobot()
   blinks[0] = false;
   blinks[1] = false;
   blinks[2] = false;
+  //robotAdventureTimeDanceTime();
   return;
 }
 
@@ -530,6 +531,41 @@ void arms()
 
   if (servo[rightArm] < 20) servo[rightArm] = 20;
 }
+void danceWatcher()
+{
+  if (joystickVal(1, "9") && joystickVal(2, "10"))
+  {
+  //servo[leftArm] = 0;
+  //servo[rightArm] = 0;
+  const int amount = 5;
+  bool dir = false;
+      if (servo[leftArm] == 0 && servo[rightArm] == 0) dir = false;
+    else if (servo[leftArm] == 255 && servo[rightArm] == 255) dir = true;
+  wait1Msec(750);
+  while (joystickVal(1, "9") && joystickVal(2, "10"))
+  {
+    eraseDisplay();
+    nxtDisplayString(3, "Danger Will");
+    nxtDisplayString(4, "Robinson!");
+    if (!dir)
+    {
+      //increase left, subtract right
+      servo[leftArm] = servo[leftArm] + amount;
+      servo[rightArm] = servo[rightArm] + amount;
+      wait1Msec(30);
+    }
+    else if (dir)
+    {
+      //decrease left, increase right
+      servo[leftArm] = servo[leftArm] - amount;
+      servo[rightArm] = servo[rightArm] - amount;
+      wait1Msec(30);
+    }
+    if (servo[leftArm] == 0 && servo[rightArm] == 0) dir = false;
+    else if (servo[leftArm] == 255 && servo[rightArm] == 255) dir = true;
+  }
+}
+}
 
 void cronAll()
 {
@@ -545,6 +581,7 @@ void cronAll()
     releasePreloadsWatcher();
     turnToggleWatcher();
     usLights();
+    danceWatcher();
 
 }
 task blinkLights()

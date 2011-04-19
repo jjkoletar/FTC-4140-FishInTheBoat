@@ -134,7 +134,7 @@ void turnDegrees(int power, string wheel, float degrees)
   {
     motor[leftMotor] = power;
     motor[rightMotor] = 0;
-    while (abs(nMotorEncoder[leftMotor]) <= turnLength)
+    while (abs(nMotorEncoder[leftMotor]) <= abs(turnLength))
     {
       //motor already set, just wait for loop to finish
     }
@@ -144,7 +144,7 @@ void turnDegrees(int power, string wheel, float degrees)
   {
     motor[rightMotor] = power;
     motor[leftMotor] = 0;
-    while (abs(nMotorEncoder[rightMotor]) <= turnLength)
+    while (abs(nMotorEncoder[rightMotor]) <= abs(turnLength))
     {
       //motor already set... wait for loop to finish...
     }
@@ -298,4 +298,32 @@ bool innerTS(string side="both")
   else if (side == "left") return TSreadState(msensor_S2_4);
   else if (side == "right")return TSreadState(msensor_S2_3);
   else return false;
+}
+
+void robotAdventureTimeDanceTime()
+{
+  servo[leftArm] = 0;
+  servo[rightArm] = 0;
+  const int amount = 5;
+  bool dir = false;
+  wait1Msec(750);
+  while (true)
+  {
+    if (!dir)
+    {
+      //increase left, subtract right
+      servo[leftArm] = servo[leftArm] + amount;
+      servo[rightArm] = servo[rightArm] + amount;
+      wait1Msec(30);
+    }
+    else if (dir)
+    {
+      //decrease left, increase right
+      servo[leftArm] = servo[leftArm] - amount;
+      servo[rightArm] = servo[rightArm] - amount;
+      wait1Msec(30);
+    }
+    if (servo[leftArm] == 0 && servo[rightArm] == 0) dir = false;
+    else if (servo[leftArm] == 255 && servo[rightArm] == 255) dir = true;
+  }
 }
