@@ -5,8 +5,8 @@
 #pragma config(Motor,  motorA,          red,           tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  motorB,          green,         tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  motorC,          yellow,        tmotorNormal, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     conveyorArmMotor, tmotorNormal, openLoop)
-#pragma config(Motor,  mtr_S1_C2_2,     conveyorMotor, tmotorNormal, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     conveyorMotor, tmotorNormal, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_2,     conveyorArmMotor, tmotorNormal, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     leftMotor,     tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     rightMotor,    tmotorNormal, openLoop, reversed, encoder)
 #pragma config(Servo,  srvo_S1_C1_1,    rightArm,             tServoStandard)
@@ -85,6 +85,7 @@ void initializeRobot()
   servo[leftArm] =  255;
   servo[leftGoalHolder] = 190;
   servo[preloadServo] = 255;
+  nMotorEncoder[conveyorArmMotor] = 0;
   blinks[0] = false;
   blinks[1] = false;
   blinks[2] = false;
@@ -148,19 +149,21 @@ void conveyorBelt()
   if (highConveyorPower) conveyorPower = 25;
   else conveyorPower = 15;
   //down/out = pos, in = neg
-  if (joystickVal(2, "y1") > deadZone) motor[conveyorMotor] = conveyorPower;
-  else if (joystickVal(2, "y1") < deadZone && joystickVal(2, "y1") < 0) motor[conveyorMotor] = -conveyorPower;
+  if (joystickVal(2, "y1") > deadZone+25 && nMotorEncoder[conveyorArmMotor] > 1000) motor[conveyorMotor] = conveyorPower;
+  else if (joystickVal(2, "y1") < deadZone-25 && joystickVal(2, "y1") < 0 && nMotorEncoder[conveyorArmMotor] > 1000) motor[conveyorMotor] = -conveyorPower;
   else motor[conveyorMotor] = 0;
   if (joystickVal(2, "7"))
   {
     //belt down
+    /*
     motor[conveyorArmMotor] = 60;
     wait1Msec(250);
     motor[conveyorArmMotor] = 30;
     wait1Msec(1250);
     motor[conveyorArmMotor] = 1;
     wait1Msec(500);
-    motor[conveyorArmMotor] = 0;
+    motor[conveyorArmMotor] = 0;*/
+    conveyorOut();
     waitForRelease(2, "7");
   }
   else if (joystickVal(2, "5"))
@@ -174,7 +177,8 @@ void conveyorBelt()
     //wait1Msec(500);
     //motor[conveyorArmMotor] = 0;
     //waitForRelease(2, "5");
-    motor[conveyorArmMotor] = -50;
+    //motor[conveyorArmMotor] = -50;
+    conveyorIn();
 
 
   }

@@ -327,3 +327,34 @@ void robotAdventureTimeDanceTime()
     else if (servo[leftArm] == 255 && servo[rightArm] == 255) dir = true;
   }
 }
+void conveyorOut()
+{
+   motor[conveyorMotor] = 0;
+   motor[conveyorArmMotor] = 50;
+   int lastVal = 0;
+   while (nMotorEncoder[conveyorArmMotor] < 2500) {
+     lastVal = nMotorEncoder[conveyorArmMotor];
+     wait1Msec(200);
+     if (lastVal == nMotorEncoder[conveyorArmMotor])
+     {
+       motor[conveyorArmMotor] = motor[conveyorArmMotor] + 5;
+       wait1Msec(50);
+     }
+
+   }
+   motor[conveyorArmMotor] = 1;
+   while (nMotorEncoder[conveyorArmMotor] < 2600) {
+   }
+   motor[conveyorArmMotor] = 0;
+ }
+void conveyorIn()
+{
+   motor[conveyorMotor] = 0;
+   motor[conveyorArmMotor] = -50;
+   while (nMotorEncoder[conveyorArmMotor] > 1000) {
+   }
+   motor[conveyorArmMotor] = -10;
+   while (nMotorEncoder[conveyorArmMotor] > 200) {
+   }
+   motor[conveyorArmMotor] = 0;
+}
