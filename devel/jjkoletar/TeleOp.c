@@ -532,12 +532,12 @@ void arms()
   if (joystickVal(1, "5")) servo[leftArm] = servo[leftArm] + 3;
   else if (joystickVal(1, "7")) servo[leftArm] = servo[leftArm] - 3;
 
-  if (servo[leftArm] > 230) servo[leftArm] = 230;
+  if (servo[leftArm] <= 25 && !joystickVal(1, "7")) servo[leftArm] = 25;
 
   if (joystickVal(1, "8")) servo[rightArm] = servo[rightArm] + 3;
   else if (joystickVal(1, "6")) servo[rightArm] = servo[rightArm] - 3;
 
-  if (servo[rightArm] < 20) servo[rightArm] = 20;
+  //if (servo[rightArm] < 20) servo[rightArm] = 20;
 }
 void danceWatcher()
 {
