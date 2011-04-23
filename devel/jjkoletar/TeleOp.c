@@ -2,7 +2,7 @@
 #pragma config(Sensor, S2,     HTSMUX,              sensorI2CCustom)
 #pragma config(Sensor, S3,     front,               sensorSONAR)
 #pragma config(Sensor, S4,     back,                sensorSONAR)
-#pragma config(Motor,  motorA,          red,           tmotorNormal, openLoop, encoder)
+#pragma config(Motor,  motorA,          preloadMotor,  tmotorNormal, openLoop)
 #pragma config(Motor,  motorB,          green,         tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  motorC,          yellow,        tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     conveyorMotor, tmotorNormal, openLoop, reversed)
@@ -470,11 +470,17 @@ void releasePreloadsWatcher()
 {
   if (joystickVal(2, "1"))
   {
-    servo[preloadServo] = 255;
+    motor[preloadMotor] = 30;
+    wait1Msec(500);
+    motor[preloadMotor] = 0;
+    waitForRelease(2, "1");
   }
   else if (joystickVal(2, "3"))
   {
-    servo[preloadServo] = 50;
+    motor[preloadMotor] = -30;
+    wait1Msec(500);
+    motor[preloadMotor] = 0;
+    waitForRelease(2, "3");
   }
 }
 
@@ -597,8 +603,8 @@ task blinkLights()
   //0 = red, 1 = yellow, 2 = green
   if (blinks[0])
   {
-    if (motor[red]==100) motor[red] =   0;
-    else if (motor[red]==0)   motor[red] = 100;
+    //if (motor[red]==100) motor[red] =   0;
+    //else if (motor[red]==0)   motor[red] = 100;
   }
   if (blinks[1])
   {

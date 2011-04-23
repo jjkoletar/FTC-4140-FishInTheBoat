@@ -109,9 +109,9 @@ void light(string color="none")
 {
   motor[green] = 0;
   motor[yellow] = 0;
-  motor[red] = 0;
+  //motor[red] = 0;
 
-  if (color=="red") motor[red] = 100;
+  if (color=="red") //motor[red] = 100;
   else if (color=="none");
   else if (color=="yellow") motor[yellow] = 100;
   else if (color=="green") motor[green] = 100;
@@ -119,7 +119,7 @@ void light(string color="none")
   {
     motor[green] = 100;
     motor[yellow] = 100;
-    motor[red] = 100;
+    //motor[red] = 100;
   }
 
 }
