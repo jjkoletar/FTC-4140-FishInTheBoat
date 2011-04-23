@@ -12,7 +12,7 @@ This file will not compile on its own.
 
 
 //Notes\\
-
+*If using indent, opetions to use are: -bl -npsl -nss -ncs -npcs -bap -ss
 */
 #include "LEGOUS-driver.h"
 #include "LEGOTS-driver.h"

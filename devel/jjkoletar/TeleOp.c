@@ -4,14 +4,14 @@
 #pragma config(Sensor, S4,     back,                sensorSONAR)
 #pragma config(Motor,  motorA,          preloadMotor,  tmotorNormal, openLoop)
 #pragma config(Motor,  motorB,          flapMotor,     tmotorNormal, openLoop, encoder)
-#pragma config(Motor,  motorC,          yellow,        tmotorNormal, openLoop, encoder)
+#pragma config(Motor,  motorC,          sideLight,     tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     conveyorMotor, tmotorNormal, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     conveyorArmMotor, tmotorNormal, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     leftMotor,     tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C3_2,     rightMotor,    tmotorNormal, openLoop, reversed, encoder)
 #pragma config(Servo,  srvo_S1_C1_1,    rightArm,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_2,    leftArm,              tServoStandard)
-#pragma config(Servo,  srvo_S1_C1_3,    preloadServo,         tServoStandard)
+#pragma config(Servo,  srvo_S1_C1_3,    flagServo,            tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_4,    possessionServo,      tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_5,    leftGoalHolder,       tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_6,    clawServo,            tServoStandard)
@@ -44,7 +44,7 @@ bool highConveyorPower = true;
 bool blinks[3];
 const int whiteTape = 35;
 const int onMat     = 25;
-
+const int gray = LSvalNorm(msensor_S2_2)+4;
 
 void defineVariables()
 {
@@ -92,7 +92,6 @@ void initializeRobot()
   servo[rightArm] =    0;
   servo[leftArm] =  255;
   servo[leftGoalHolder] = 190;
-  servo[preloadServo] = 255;
   servo[clawServo] = 78;
   nMotorEncoder[conveyorArmMotor] = 0;
   blinks[0] = false;
@@ -481,16 +480,16 @@ void releasePreloadsWatcher()
   if (joystickVal(2, "1"))
   {
     motor[preloadMotor] = 30;
-    wait1Msec(500);
-    motor[preloadMotor] = 0;
     waitForRelease(2, "1");
+    motor[preloadMotor] = 0;
+
   }
   else if (joystickVal(2, "3"))
   {
     motor[preloadMotor] = -30;
-    wait1Msec(500);
-    motor[preloadMotor] = 0;
     waitForRelease(2, "3");
+    motor[preloadMotor] = 0;
+
   }
 }
 
@@ -602,7 +601,15 @@ void rearClaws()
     servo[clawServo] = 78;
   }
 }
-
+void light()
+{
+  if (SensorValue[S4] == 255) return;
+  else if (SensorValue[S4] < 30) servo[flagServo] = 70;
+  else if (SensorValue[S4] >= 30 && SensorValue[S4] <= 31) servo[flagServo] = 128;
+  else if (SensorValue[S4] > 32) servo[flagServo] = 200;
+  if (LSvalNorm(msensor_S2_2) < 30) motor[sideLight] = 0;
+  else motor[sideLight] = 100;
+}
 void cronAll()
 {
     if (swappedJoys()) driveSwapped();
@@ -619,6 +626,7 @@ void cronAll()
     danceWatcher();
     flap();
     rearClaws();
+    light();
 }
 
 task main()
