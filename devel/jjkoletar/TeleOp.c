@@ -25,8 +25,15 @@
 #include "HTGYRO-driver.h"
 #include "LEGOLS-driver.h"
 //#include "gyro.c" ///Thanks to Aswin's post at http://www.robotc.net/forums/viewtopic.php?p=11844#p11844
+/*
 
-/*   ---FTC--Fish in the Boat Team 4140--Written for CaptureBot v1-- */
+
+---FTC--Fish in the Boat Team 4140--Teleop Program--
+
+THIS CODE IS LICENSED UNDER THE GNU GPL v3, INCLUDED IN THE SVN, AND AT THE LINK: http://www.gnu.org/licenses/gpl-3.0.txt
+NO WARRANTY PROVIDED.
+© FTC 4140 Fish in the Boat and Jeremy Koletar
+*/
 
 int speedFactor;
 int speedFactorTurns;
