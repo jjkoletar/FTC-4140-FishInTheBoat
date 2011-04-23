@@ -3,7 +3,7 @@
 #pragma config(Sensor, S3,     front,               sensorSONAR)
 #pragma config(Sensor, S4,     back,                sensorSONAR)
 #pragma config(Motor,  motorA,          preloadMotor,  tmotorNormal, openLoop)
-#pragma config(Motor,  motorB,          green,         tmotorNormal, openLoop, encoder)
+#pragma config(Motor,  motorB,          flapMotor,     tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  motorC,          yellow,        tmotorNormal, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     conveyorMotor, tmotorNormal, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     conveyorArmMotor, tmotorNormal, openLoop)
@@ -519,20 +519,6 @@ void setBlink(string color)
 }
 
 
-void usLights()
-{
-  string colorA = "";
-  if (SensorValue[S4] == 255) colorA = "all";
-  else if (SensorValue[S4] < 30) colorA = "red";
-  else if (SensorValue[S4] >= 30 && SensorValue[S4] <= 31) colorA = "green";
-  else if (SensorValue[S4] > 32) colorA = "yellow";
-  light(colorA);
-  if (LSvalNorm(msensor_S2_2) >= whiteTape)
-  {
-    //setBlink(colorA);
-  }
-}
-
 void arms()
 {
   if (joystickVal(1, "5")) servo[leftArm] = servo[leftArm] + 3;
@@ -581,6 +567,17 @@ void danceWatcher()
 }
 }
 
+void flap()
+{
+  if (joystickVal(2, "9"))
+  {
+    motor[flapMotor] = 20;
+    wait1Msec(200);
+    motor[flapMotor] = 0;
+  }
+}
+
+
 void cronAll()
 {
     if (swappedJoys()) driveSwapped();
@@ -594,31 +591,9 @@ void cronAll()
     possessionWatcher();
     releasePreloadsWatcher();
     turnToggleWatcher();
-    usLights();
     danceWatcher();
-
+    flap();
 }
-task blinkLights()
-{
-  //0 = red, 1 = yellow, 2 = green
-  if (blinks[0])
-  {
-    //if (motor[red]==100) motor[red] =   0;
-    //else if (motor[red]==0)   motor[red] = 100;
-  }
-  if (blinks[1])
-  {
-    if (motor[yellow]==100) motor[yellow] =   0;
-    else if (motor[yellow]==0)   motor[yellow] = 100;
-  }
-  if (blinks[2])
-  {
-    if (motor[green]==100) motor[green] =   0;
-    else if (motor[green]==0)   motor[green] = 100;
-  }
-  //wait1Msec(500);
-}
-
 task main()
 {
   initializeRobot();

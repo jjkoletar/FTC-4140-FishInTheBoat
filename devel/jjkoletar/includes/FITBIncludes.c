@@ -105,24 +105,6 @@ void waitForRelease(int joyNum, string button, int val=1)
   }
 }
 
-void light(string color="none")
-{
-  motor[green] = 0;
-  motor[yellow] = 0;
-  //motor[red] = 0;
-
-  if (color=="red") //motor[red] = 100;
-  else if (color=="none");
-  else if (color=="yellow") motor[yellow] = 100;
-  else if (color=="green") motor[green] = 100;
-  else if (color=="all")
-  {
-    motor[green] = 100;
-    motor[yellow] = 100;
-    //motor[red] = 100;
-  }
-
-}
 void turnDegrees(int power, string wheel, float degrees)
 {
   motor[rightMotor] = 0;
