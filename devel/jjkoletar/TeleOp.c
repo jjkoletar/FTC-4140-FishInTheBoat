@@ -603,10 +603,13 @@ void rearClaws()
 }
 void light()
 {
-  if (SensorValue[S4] == 255) return;
-  else if (SensorValue[S4] < 30) servo[flagServo] = 70;
-  else if (SensorValue[S4] >= 30 && SensorValue[S4] <= 31) servo[flagServo] = 128;
-  else if (SensorValue[S4] > 32) servo[flagServo] = 200;
+  //if (SensorValue[S4] == 255) return;
+  //else if (SensorValue[S4] < 29) servo[flagServo] = 70;
+  //else if (SensorValue[S4] >= 29 && SensorValue[S4] <= 31) servo[flagServo] = 128;
+ //else if (SensorValue[S4] > 32) servo[flagServo] = 200;
+  if (SensorValue[S4] >= 29 && SensorValue[S4] <= 31) servo[flagServo] = 128;
+  else if (SensorValue[S4] < 29) servo[flagServo] = (SensorValue[S4]*80)/30;
+  else servo[flagServo] = (SensorValue[S4]*170)/30;
   if (LSvalNorm(msensor_S2_2) < 30) motor[sideLight] = 0;
   else motor[sideLight] = 100;
 }
