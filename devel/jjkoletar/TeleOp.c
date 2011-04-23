@@ -14,7 +14,7 @@
 #pragma config(Servo,  srvo_S1_C1_3,    preloadServo,         tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_4,    possessionServo,      tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_5,    leftGoalHolder,       tServoStandard)
-#pragma config(Servo,  srvo_S1_C1_6,    unuserdgas,           tServoStandard)
+#pragma config(Servo,  srvo_S1_C1_6,    clawServo,            tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_1,    frontUS,              tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_2,    rearUS,               tServoStandard)
 #pragma config(Servo,  srvo_S1_C4_5,    ,                     tServoStandard)
@@ -76,6 +76,7 @@ void initializeRobot()
   HTSMUXinit();//           Init sensor Muxer
   HTSMUXscanPorts(HTSMUX);//^^^^^^^^^^^^^^^^^
   //init more sensors on the muxer
+  servoChangeRate[clawServo] = 3;
   LSsetActive(msensor_S2_3); //init goal grabbed lsensor
   LSsetActive(msensor_S2_2); //init lsensor inside goal grabbing area
   LSsetActive(msensor_S2_1);
@@ -85,6 +86,7 @@ void initializeRobot()
   servo[leftArm] =  255;
   servo[leftGoalHolder] = 190;
   servo[preloadServo] = 255;
+  servo[clawServo] = 78;
   nMotorEncoder[conveyorArmMotor] = 0;
   blinks[0] = false;
   blinks[1] = false;
@@ -92,6 +94,7 @@ void initializeRobot()
   //robotAdventureTimeDanceTime();
   return;
 }
+
 
 
 
@@ -569,14 +572,29 @@ void danceWatcher()
 
 void flap()
 {
-  if (joystickVal(2, "9"))
+  if (joystickVal(2, "x2") > 50)
   {
-    motor[flapMotor] = 20;
-    wait1Msec(200);
-    motor[flapMotor] = 0;
+    motor[flapMotor] = 100;
   }
+  else if (joystickVal(2, "x2") < 0 && abs(joystickVal(2, "x2")) > 50)
+  {
+    motor[flapMotor] = -100;
+  }
+  else motor[flapMotor] = 0;
 }
 
+
+void rearClaws()
+{
+  if (joystickVal(2, "6"))
+  {
+    servo[clawServo] = 0;
+  }
+  else if (joystickVal(2, "8"))
+  {
+    servo[clawServo] = 78;
+  }
+}
 
 void cronAll()
 {
@@ -593,7 +611,9 @@ void cronAll()
     turnToggleWatcher();
     danceWatcher();
     flap();
+    rearClaws();
 }
+
 task main()
 {
   initializeRobot();
