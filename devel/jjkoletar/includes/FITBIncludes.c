@@ -116,7 +116,7 @@ void turnDegrees(int power, string wheel, float degrees)
   if (wheel=="left")
   {
     motor[leftMotor] = power;
-    motor[rightMotor] = 0;
+    motor[rightMotor] = 1;
     while (abs(nMotorEncoder[leftMotor]) <= abs(turnLength))
     {
       //motor already set, just wait for loop to finish

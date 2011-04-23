@@ -598,11 +598,13 @@ void rearClaws()
   }
   else if (joystickVal(2, "8"))
   {
-    servo[clawServo] = 78;
+    servo[clawServo] = 87;
   }
 }
 void light()
 {
+  if (joystickVal(2, "11"))
+  {
   //if (SensorValue[S4] == 255) return;
   //else if (SensorValue[S4] < 29) servo[flagServo] = 70;
   //else if (SensorValue[S4] >= 29 && SensorValue[S4] <= 31) servo[flagServo] = 128;
@@ -612,6 +614,8 @@ void light()
   else servo[flagServo] = (SensorValue[S4]*170)/30;
   if (LSvalNorm(msensor_S2_2) < 30) motor[sideLight] = 0;
   else motor[sideLight] = 100;
+}
+else servo[flagServo] = 255;
 }
 void cronAll()
 {
