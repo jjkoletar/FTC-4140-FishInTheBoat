@@ -42,6 +42,7 @@ const int deadZone = 5;
 bool turnToggle = true;
 bool highConveyorPower = true;
 bool blinks[3];
+int usVals[5];
 const int whiteTape = 35;
 const int onMat     = 25;
 const int gray = LSvalNorm(msensor_S2_2)+4;
@@ -534,6 +535,7 @@ void arms()
   else if (joystickVal(1, "7")) servo[leftArm] = servo[leftArm] - 3;
 
   if (servo[leftArm] <= 25 && !joystickVal(1, "7")) servo[leftArm] = 25;
+  if (servo[rightArm] <= 237 && !joystickVal(1, "5")) servo[rightArm] = 237;
 
   if (joystickVal(1, "8")) servo[rightArm] = servo[rightArm] + 3;
   else if (joystickVal(1, "6")) servo[rightArm] = servo[rightArm] - 3;
@@ -603,18 +605,35 @@ void rearClaws()
 }
 void light()
 {
-  if (joystickVal(2, "11"))
+  //advance each value
+  int oldVals[5];
+  oldVals[0] = usVals[0];
+  oldVals[1] = usVals[1];
+  oldVals[2] = usVals[2];
+  oldVals[3] = usVals[3];
+  oldVals[4] = usVals[4];
+  usVals[1] = oldVals[0];
+  usVals[2] = oldVals[1];
+  usVals[3] = oldVals[2];
+  usVals[4] = oldVals[3];
+  usVals[0] = SensorValue[S4];
+  if (usVals[0] > 200) usVals[0] = usVals[1];
+  int processedVal = (usVals[0]+usVals[1]+usVals[2]+usVals[3]+usVals[4])/5;
+  if (!joystickVal(2, "11"))
   {
   //if (SensorValue[S4] == 255) return;
   //else if (SensorValue[S4] < 29) servo[flagServo] = 70;
   //else if (SensorValue[S4] >= 29 && SensorValue[S4] <= 31) servo[flagServo] = 128;
- //else if (SensorValue[S4] > 32) servo[flagServo] = 200;
-  if (SensorValue[S4] >= 29 && SensorValue[S4] <= 31) servo[flagServo] = 128;
-  else if (SensorValue[S4] < 29) servo[flagServo] = (SensorValue[S4]*80)/30;
-  else servo[flagServo] = (SensorValue[S4]*170)/30;
+  //else if (SensorValue[S4] > 32) servo[flagServo] = 200;
+  //writeDebugStreamLine("[INFO] FUS: %d", SensorValue[S3]);
+  //writeDebugStreamLine("[INFO] RUS: %d", SensorValue[S4]);
+  //wait1Msec(100);
+  if (processedVal >= 29 && processedVal <= 31) servo[flagServo] = 128;
+  else if (processedVal < 29) servo[flagServo] = (processedVal*20)/30;
+  else servo[flagServo] = (processedVal*170)/30;
   if (LSvalNorm(msensor_S2_2) < 30) motor[sideLight] = 0;
   else motor[sideLight] = 100;
-}
+  }
 else servo[flagServo] = 255;
 }
 void cronAll()

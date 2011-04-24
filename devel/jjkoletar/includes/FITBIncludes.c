@@ -44,6 +44,12 @@ int toInt(string num)
   else return 0;
 }
 
+void encoderDebugStream()
+{
+  if (nMotorEncoder[leftMotor] != 0) writeDebugStreamLine("[WARN] left motor encoder is not 0!");
+  if (nMotorEncoder[rightMotor] != 0) writeDebugStreamLine("[WARN] rt motor encoder is not 0!");
+}
+
 void swapJoys()
 {
   motor[leftMotor] = 0;
@@ -108,6 +114,7 @@ void waitForRelease(int joyNum, string button, int val=1)
 
 void turnDegrees(int power, string wheel, float degrees)
 {
+  encoderDebugStream();
   motor[rightMotor] = 0;
   motor[leftMotor] = 0;
   nMotorEncoder[leftMotor]  = 0;
@@ -116,7 +123,7 @@ void turnDegrees(int power, string wheel, float degrees)
   if (wheel=="left")
   {
     motor[leftMotor] = power;
-    motor[rightMotor] = 1;
+    motor[rightMotor] = 0;
     while (abs(nMotorEncoder[leftMotor]) <= abs(turnLength))
     {
       //motor already set, just wait for loop to finish
@@ -138,15 +145,55 @@ void turnDegrees(int power, string wheel, float degrees)
   nMotorEncoder[rightMotor]= 0;
 }
 
-void moveDist(int power, float length,  int oPower = power, bool coast=false)
+void periTurn(int power, string wheel, float degrees)
 {
+  encoderDebugStream();
+  motor[rightMotor] = 0;
+  motor[leftMotor] = 0;
+  nMotorEncoder[rightMotor] = 0;
+  nMotorEncoder[leftMotor] = 0;
+  int turnLength = ceil((degrees/60)*1440);
+  turnLength = turnLength/2;
+  if (wheel=="left")
+  {
+    motor[leftMotor] = power;
+    motor[rightMotor] = -power;
+    while (abs(nMotorEncoder[rightMotor]) <= abs(turnLength))
+    {
+      //wait for loop
+    }
+    motor[leftMotor] = 0;
+    motor[rightMotor] = 0;
+  }
+  else if (wheel=="right")
+  {
+    motor[leftMotor] = -power;
+    motor[rightMotor] = power;
+    while (abs(nMotorEncoder[leftMotor]) <= abs(turnLength))
+    {
+      //loop
+    }
+    motor[leftMotor] = 0;
+    motor[rightMotor] = 0;
+  }
+  nMotorEncoder[rightMotor] = 0;
+  nMotorEncoder[leftMotor] = 0;
+}
+
+
+void moveDist(int power, float length, int leftFix=0,  int oPower = power, bool coast=false)
+{
+  encoderDebugStream();
+  int lastValue = 0;
   nMotorEncoder[leftMotor] = 0;
   nMotorEncoder[rightMotor]= 0;
   int lengthI = ceil(((length-5)/31.9185813)*1440);
   if (power < 0) lengthI = -lengthI;
   motor[leftMotor]  = power/*+leftAdjust*/;
-  motor[rightMotor] = oPower/*+rightAdjust*/;
+  motor[rightMotor] = oPower+leftFix/*+rightAdjust*/;
   while (abs(nMotorEncoder[rightMotor]) <= abs(lengthI)) {
+    if (lastValue != nMotorEncoder[rightMotor]) writeDebugStreamLine("[INFO] right encoder (inmove): %d", nMotorEncoder[rightMotor]);\
+    lastValue = nMotorEncoder[rightMotor];
   }
   if (coast) {
     motor[leftMotor]  = 1;
@@ -181,7 +228,7 @@ void turnDeg(int power, string wheel, int degrees)
 Function is deprecated. Use turnDegrees() instead.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
-
+  writeDebugStreamLine("[BAD] Call to deprecated function turnDeg()!");
   nMotorEncoder[leftMotor] =  1;
   nMotorEncoder[rightMotor] = 0;
   //while (nMotorEncoder[leftMotor] <= degrees*1440);
@@ -285,6 +332,7 @@ bool innerTS(string side="both")
 
 void robotAdventureTimeDanceTime()
 {
+  writeDebugStreamLine("[INFO] Dance Time!");
   servo[leftArm] = 0;
   servo[rightArm] = 0;
   const int amount = 5;
