@@ -96,6 +96,7 @@ void initializeRobot()
   servo[clawServo] = 78;
   servo[preloadServo] = 255;
   nMotorEncoder[conveyorArmMotor] = 0;
+  servoChangeRate[leftArm] = 13;
   blinks[0] = false;
   blinks[1] = false;
   blinks[2] = false;
@@ -482,7 +483,7 @@ void releasePreloadsWatcher()
   if (joystickVal(2, "1"))
   {
     //closed
-    servo[preloadServo] = 255;
+    servo[preloadServo] = 185;
   }
   else if (joystickVal(2, "3"))
   {
