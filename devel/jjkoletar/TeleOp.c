@@ -11,7 +11,7 @@
 #pragma config(Motor,  mtr_S1_C3_2,     rightMotor,    tmotorNormal, openLoop, reversed, encoder)
 #pragma config(Servo,  srvo_S1_C1_1,    rightArm,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_2,    leftArm,              tServoStandard)
-#pragma config(Servo,  srvo_S1_C1_3,    flagServo,            tServoStandard)
+#pragma config(Servo,  srvo_S1_C1_3,    preloadServo,         tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_4,    possessionServo,      tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_5,    leftGoalHolder,       tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_6,    clawServo,            tServoStandard)
@@ -480,16 +480,13 @@ void releasePreloadsWatcher()
 {
   if (joystickVal(2, "1"))
   {
-    motor[preloadMotor] = 30;
-    waitForRelease(2, "1");
-    motor[preloadMotor] = 0;
-
+    //closed
+    servo[preloadServo] = 255;
   }
   else if (joystickVal(2, "3"))
   {
-    motor[preloadMotor] = -30;
-    waitForRelease(2, "3");
-    motor[preloadMotor] = 0;
+    //open
+    servo[preloadServo] = 0;
 
   }
 }
@@ -628,13 +625,17 @@ void light()
   //writeDebugStreamLine("[INFO] FUS: %d", SensorValue[S3]);
   //writeDebugStreamLine("[INFO] RUS: %d", SensorValue[S4]);
   //wait1Msec(100);
-  if (processedVal >= 29 && processedVal <= 31) servo[flagServo] = 128;
+ /*
+ !!!!!
+ EMERGENCY HARDWARE CHANGE
+ !!!!!
+ if (processedVal >= 29 && processedVal <= 31) servo[flagServo] = 128;
   else if (processedVal < 29) servo[flagServo] = (processedVal*20)/30;
   else servo[flagServo] = (processedVal*170)/30;
+  */
   if (LSvalNorm(msensor_S2_2) < 30) motor[sideLight] = 0;
   else motor[sideLight] = 100;
   }
-else servo[flagServo] = 255;
 }
 void cronAll()
 {
