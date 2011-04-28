@@ -114,11 +114,11 @@ void waitForRelease(int joyNum, string button, int val=1)
 
 void turnDegrees(int power, string wheel, float degrees)
 {
+  nMotorEncoder[leftMotor]  = 0;
+  nMotorEncoder[rightMotor] = 0;
   encoderDebugStream();
   motor[rightMotor] = 0;
   motor[leftMotor] = 0;
-  nMotorEncoder[leftMotor]  = 0;
-  nMotorEncoder[rightMotor] = 0;
   int turnLength = ceil((degrees/60)*1440);
   if (wheel=="left")
   {
@@ -127,6 +127,8 @@ void turnDegrees(int power, string wheel, float degrees)
     while (abs(nMotorEncoder[leftMotor]) <= abs(turnLength))
     {
       //motor already set, just wait for loop to finish
+      //debug info !
+      writeDebugStreamLine("[INFO] Turn Enc (lt): %d", nMotorEncoder[leftMotor]);
     }
     motor[leftMotor] = 0;
   }
@@ -137,6 +139,8 @@ void turnDegrees(int power, string wheel, float degrees)
     while (abs(nMotorEncoder[rightMotor]) <= abs(turnLength))
     {
       //motor already set... wait for loop to finish...
+      //debug info too!
+      writeDebugStreamLine("[INFO] Turn Enc (rt): %d", nMotorEncoder[rightMotor]);
     }
     motor[rightMotor] = 0;
 

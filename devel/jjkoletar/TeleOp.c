@@ -94,6 +94,7 @@ void initializeRobot()
   servo[leftArm] =  255;
   servo[leftGoalHolder] = 190;
   servo[clawServo] = 78;
+  servo[preloadServo] = 255;
   nMotorEncoder[conveyorArmMotor] = 0;
   blinks[0] = false;
   blinks[1] = false;
@@ -532,7 +533,7 @@ void arms()
   else if (joystickVal(1, "7")) servo[leftArm] = servo[leftArm] - 3;
 
   if (servo[leftArm] <= 25 && !joystickVal(1, "7")) servo[leftArm] = 25;
-  if (servo[rightArm] <= 237 && !joystickVal(1, "5")) servo[rightArm] = 237;
+  if (servo[rightArm] >= 237 && !joystickVal(1, "8")) servo[rightArm] = 237;
 
   if (joystickVal(1, "8")) servo[rightArm] = servo[rightArm] + 3;
   else if (joystickVal(1, "6")) servo[rightArm] = servo[rightArm] - 3;
